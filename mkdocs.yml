@@ -10,7 +10,8 @@ theme:
   features:
     - navigation.footer
     - navigation.indexes
-  logo: ./docs/assets/homme.png
+  logo: ./assets/logo.png
+  favicon: ./assets/favicon.ico
 
 markdown_extensions:
   - admonition

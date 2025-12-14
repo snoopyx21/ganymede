@@ -51,7 +51,7 @@ Linux distributions are categorized primarily by their package management system
 * **Ubuntu**: Highly popular for both servers and desktops. It focuses on user-friendliness and includes modern software. **Ubuntu LTS (Long-Term Support)** releases are commonly used in server environments for their predictable release cycle and five years of maintenance.
 * **Linux Mint**: Based on Ubuntu (and Debian), Mint is primarily targeted at desktop users who seek a traditional, comfortable, and intuitive interface experience. It often prioritizes ease of use and multimedia support over bleeding-edge server features.
 
-### V. System and Service Management
+### System and Service Management
 
 Modern Linux relies on **systemd** as the standard init system, responsible for starting the OS, managing system services (daemons), and handling logging.
 
