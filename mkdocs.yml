@@ -9,6 +9,7 @@ theme:
   name: material
   features:
     - navigation.footer
+    - navigation.indexes
 
 
 markdown_extensions:
@@ -21,10 +22,9 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - My Cookbooks:
-    - AIX Cookbook: guides/aix.md
+  - AIX Cookbook:
     - AIX Concepts: guides/aix/general.md
-    - Linux Cookbook: guides/linux.md
+  - Linux Cookbook: 
     - Linux Concepts: guides/linux/general.md
 
 

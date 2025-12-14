@@ -1,46 +1,67 @@
-### AIX: Core Concepts and Administration
+## Core Concepts, Administration, and Roadmap
 
-This document provides an overview of the foundational concepts and essential utilities of the IBM AIX operating system. AIX is a unique form of UNIX that relies on its own internal database, the Object Data Manager (ODM), to store critical configuration data for devices and the volume manager.
+### Introduction to AIX
 
-**System Administration Tools**
+AIX (Advanced Interactive eXecutive) is a specialized UNIX operating system that stands out due to its reliance on a proprietary internal database, the **Object Data Manager (ODM)**, which stores critical configuration data for the Logical Volume Manager (LVM) and system devices. For administrative tasks, the use of **SMITTY (System Management Interface Tool)** is highly recommended, as it simplifies complex commands and helps prevent common administrative errors.
 
-The primary tool for managing AIX servers is the **System Management Interface Tool (SMITTY)**. SMITTY simplifies administration tasks and helps reduce errors by guiding the user through command structures.
-
-![smitty](/docs/assets/smitty.png){ width="300" }
+![smitty](../../assets/smitty.png){ width="300" }
 /// caption
-Image caption
+smitty
 ///
 
-**Installation and Updates**
 
-AIX can be installed using several methods, including CD-ROM, system backup images (`mksysb`) on bootable media, or a Network Installation Management (NIM) server. The boot process allows access to SMS mode (System Management Services) by pressing `<1>` or `<F1>` to modify the bootlist for installation.
+### Logical Volume Manager (LVM)
 
-Software is managed through packages categorized by:
-* **Technology Levels (TLs)**: Major stable updates that introduce new features and hardware support.
-* **Service Packs (SPs)**: Intermediate updates providing security and critical fixes.
-* **Filesets**: The basic unit of software.
+AIX's LVM virtualizes physical disks, offering a flexible and robust storage management system:
 
-Updates can be applied and committed permanently, or applied temporarily (`APPLIED` mode) to allow for easy rollback if issues arise.
+* **Physical Volumes (PVs)**: The underlying physical hard disks. Commands like `lspv` list available PVs.
+* **Volume Groups (VGs)**: Containers for PVs, with the mandatory `rootvg` being the core system volume group. VGs are partitioned into **Physical Partitions (PPs)**, which are the smallest allocation unit for Logical Volumes. VGs have maximum capacity limits based on the PP size (e.g., 1016 PPs per PV for a standard VG, which can be modified using the `chvg -t` command).
+* **Logical Volumes (LVs)**: Data containers within a VG used for RAW devices or filesystems. While LVs can be directly resized, it is generally recommended to change the filesystem size (`chfs`), which automatically adjusts the underlying LV.
+* **Mirroring and Resilience**: AIX LVM supports RAID 0, 1, and 0+1 (10). Mirroring can be configured at the LV level (`mklvcopy`) or across the entire VG (`mirrorvg`). Special procedures (`bosboot` and `bootlist`) are required to ensure a mirrored `rootvg` is fully bootable.
+* **VG Operations**: VGs (excluding `rootvg`) can be taken offline (`varyoffvg`), brought online (`varyonvg`), and even **exported** and **imported** (the only way to effectively rename a VG).
+* **Snapshots**: Snapshots are often created by splitting a mirror copy (`splitvg`) to get an instantaneous, full copy of the data, which can be mounted read-only for backup purposes. JFS2 filesystems also support their own snapshot mechanism.
 
-**Logical Volume Manager (LVM)**
+### Filesystem Management and Networking
 
-AIX's LVM virtualizes physical disks, offering flexibility and resilience.
-* **Physical Volumes (PVs)** are the physical hard disks.
-* **Volume Groups (VGs)** are containers for one or more PVs, with the mandatory `rootvg` being the system's core VG. VGs are composed of **Physical Partitions (PPs)**, which are the basic allocation increment.
-* **Logical Volumes (LVs)** are created within VGs to hold data or host filesystems. LVM supports data mirroring (RAID 1) at the LV (`mklvcopy`) or VG (`mirrorvg`) level.
-* **Management**: VGs (excluding `rootvg`) can be taken offline (`varyoffvg`) and brought back online (`varyonvg`), or exported and imported to facilitate transfer or renaming between servers. Data can be moved between PVs within a VG using `migratepv`.
-* **Snapshots**: Read-only snapshots, particularly for JFS2 filesystems, can be created almost instantaneously by temporarily freezing a mirror copy.
+AIX filesystems include **JFS** and the modern **JFS2 (Enhanced Journaled File System)**. Filesystem configurations are tracked in `/etc/filesystems`.
 
-**Filesystems (FS) and Networking**
+* **Resizing**: Filesystem size is adjusted using `chfs -a size=<new_size>`.
+* **NFS (Network File System)**: NFS exports are configured in `/etc/exports` and managed via `exportfs -va`. When mounting an NFS share, using the `soft` option is preferred over the default `hard` mount to prevent the system from freezing due to network issues.
+* **JFS2 Snapshots**: Instantaneous, read-only copies. Multiple snapshots can be chained, meaning the most recent snapshot depends on the previous ones.
 
-AIX primarily uses JFS and the improved **JFS2 (Enhanced Journaled File System)**. Filesystem configurations are tracked in `/etc/filesystems`, and their size can be adjusted using `chfs`.
+### Device and Package Administration
 
-NFS exports are managed by activating the necessary daemons and defining share attributes in `/etc/exports`. When mounting an NFS filesystem, using the `soft` option is recommended to prevent the system from hanging if a network issue occurs.
+* **Device Management**: All devices are defined in the ODM. Commands like `lsdev -C` list all configured devices (disks, adapters, etc.), and `lsslot` shows their physical locations. `lscfg -vp` provides detailed hardware characteristics (serial number, firmware, etc.).
+* **Package Management**: AIX software is managed through a hierarchy:
+    * **Filesets**: The basic unit of software/patching.
+    * **APARs (Authorized Program Analysis Report)**: Individual fixes.
+    * **Service Packs (SPs)**: Intermediate updates for critical and security fixes (`oslevel -s`).
+    * **Technology Levels (TLs)**: Major, stable updates released twice a year with new features and hardware support (`oslevel -r`).
+* **Updating**: Updates are managed via `smitty update_all`. Patches can be temporarily **APPLIED** (allowing for simple rollback) or **COMMITTED** (finalized).
 
-**Device Management**
+### Backup and Daemon Management
 
-All devices are defined and managed within the ODM database. Commands like `lsdev` and `lsslot` are used to list and determine the physical and logical configuration of components, including disk drives, network adapters, and Fibre Channel cards.
+* **System Backup**: The `mksysb` command performs a unique system backup that includes a boot image (`bosboot`), system definition files (`image.data` and `bosinst.data`), and the system data. Backups created on CD/DVD/tape are bootable, while file-based backups are not.
+* **Daemons**: System daemons are managed via the System Resource Controller (SRC), using commands like `lssrc -a` to list all services and `startsrc`/`stopsrc` for control.
 
-**Backup**
+---
 
-Standard system backups (`mksysb`) are unique due to AIX's internal database structure. A `mksysb` is a system image that includes the boot sector, configuration files (`image.data` and `bosinst.data`), and the system data itself. While a `mksysb` file created on disk is not bootable, one created on tape or CD/DVD is, allowing for a complete system restoration. Separate commands like `savevg` are used to back up non-system volume groups.
+## AIX Roadmap and Modernization (AIX 7.3 TL2 Highlights)
+
+IBM’s roadmap for AIX is focused on **Hybrid Cloud** enablement and system modernization. The **AIX 7.3 Technology Level 2 (TL2)**, released in November 2023, highlights these key areas:
+
+### Automation and Modernization
+
+* **Open-Source Integration**: Focus on integrating open-source technology for easier management and cloud deployment models.
+* **Core Tools Updates**: Inclusion of updated open-source components:
+    * **Python** (v3.19.17) for out-of-the-box Ansible automation.
+    * **Bash** (v5.2.15) as an included alternate shell.
+    * Updates to essential libraries and tools (`libxml2`, `rpm`, `rsyslog`).
+* **Management Enhancements**: Improved capabilities for image creation, such as `create_ova` with hardware compression.
+
+### Enhanced Availability
+
+* **Live Kernel Update**: Optimized performance for AIX live kernel updates in PowerVC environments.
+* **Network Resilience**: Enhanced LLDP (Link Layer Discovery Protocol) reporting.
+* **Storage Resilience**: MPIO (Multipath I/O) support for FPIN (Fabric Performance Impact Notification).
+
