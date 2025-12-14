@@ -8,25 +8,8 @@ repo_url: https://github.com/snoopyx21/ganymede
 theme:
   name: material
 
-
-
-  features:
-    - navigation.tabs
-    - navigation.tabs.sticky
-    - navigation.top
-    - navigation.indexes
-    - search.highlight
-    - search.share
-    - search.suggest
-    - content.tabs.link
-    - content.code.copy
-    - content.action.edit
-    - content.action.view
-
-
 nav:
   - Home: index.md
   - My Cookbooks:
     - AIX Cookbook: guide/aix.md
     - Linux Cookbook: guide/linux.md
-  - About Me: index.md
