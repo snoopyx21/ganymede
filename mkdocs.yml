@@ -7,9 +7,26 @@ site_description: >-
 repo_url: https://github.com/snoopyx21/ganymede
 theme:
   name: material
+  features:
+    - navigation.footer
+
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
 
 nav:
   - Home: index.md
   - My Cookbooks:
     - AIX Cookbook: guide/aix.md
     - Linux Cookbook: guide/linux.md
+
+
+extra:
+  social:
+    - icon: simple/github
+      link: https://github.com/snoopyx21
+
+
+copyright: Copyright &copy; 2025 Constantin Divriotis. All rights reserved.
