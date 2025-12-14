@@ -1,6 +1,6 @@
 site_name: 'Blog @snoopyx21'
 site_dir: /var/www/mkdocs
-site_author: 'Constantin DIvriotis'
+site_author: 'Constantin Divriotis'
 site_url: https://ganymede.blog/
 site_description: >-
   Constantin Divriotis | Playground
@@ -10,7 +10,7 @@ theme:
   features:
     - navigation.footer
     - navigation.indexes
-
+  logo: ./docs/assets/homme.png
 
 markdown_extensions:
   - admonition
@@ -34,4 +34,4 @@ extra:
       link: https://github.com/snoopyx21
 
 
-copyright: Copyright &copy; 2025 Constantin Divriotis. All rights reserved.
+copyright: Copyright &copy; 2025 Constantin Divriotis | Powered by GNU GPLv3
