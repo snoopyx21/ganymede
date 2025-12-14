@@ -1,5 +1,5 @@
-site_dir: /var/www/mkdocs
 site_name: Blog Constantin Divriotis
+site_dir: /var/www/mkdocs
 site_url: https://ganymede.blog/
 theme:
   name: material
