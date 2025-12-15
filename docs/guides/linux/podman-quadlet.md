@@ -16,17 +16,15 @@ By adding the option `AutoUpdate=registry` within the `[Container]` section, you
 
 -----
 
-## 🛠️ Monitoring Examples with Quadlet
+## Monitoring Examples with Quadlet
 
 Quadlet is perfectly suited for self-hosting and monitoring environments. Here are configuration examples for deploying Grafana and Uptime Kuma using Quadlet files, allowing you to manage them easily with `systemctl --user`.
 
-### 1\. Grafana Container (`grafana.container`)
+### Grafana Container (`grafana.container`)
 
 This file describes a standalone Grafana container with data persistence and automated image updates enabled.
 
-???+ note
-
-    * **GitHub Repository:** [snoopyx21/podman-quadlet-grafana](https://www.google.com/search?q=https://github.com/snoopyx21/podman-quadlet-grafana)
+  * **My implementation example:**[snoopyx21/podman-quadlet-grafana](https://www.google.com/search?q=https://github.com/snoopyx21/podman-quadlet-grafana)
 
 <!-- end list -->
 
@@ -47,13 +45,11 @@ Restart=always
 WantedBy=default.target
 ```
 
-### 2\. Uptime Kuma Container (`uptime-kuma.container`)
+### Uptime Kuma Container (`uptime-kuma.container`)
 
 Uptime Kuma is a popular, lightweight monitoring tool. Here is the simplified Quadlet configuration for its deployment.
 
-???+ note
-  
-    * **GitHub Repository:** [snoopyx21/podman-quadlet-uptime-kuma](https://github.com/snoopyx21/podman-quadlet-uptime-kuma)
+  * **My implementation example:** [snoopyx21/podman-quadlet-uptime-kuma](https://github.com/snoopyx21/podman-quadlet-uptime-kuma)
 
 <!-- end list -->
 
