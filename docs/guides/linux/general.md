@@ -24,7 +24,7 @@ The FHS dictates a standardized directory structure across most Linux distributi
 2.  **Volume Groups (VGs)**: A pool of space aggregated from one or more PVs.
 3.  **Logical Volumes (LVs)**: The actual partitions created from the VG's pool, which are mounted as filesystems.
 
-#### 💡 Recommended LVM Strategy
+#### Recommended LVM Strategy
 
 For enterprise environments, an effective LVM setup ensures resilience, flexibility, and performance:
 
